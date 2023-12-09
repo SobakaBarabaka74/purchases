@@ -47,8 +47,8 @@ Spawns.GetContext().RespawnTime.Value = 0;
 
 // Сохранение
 var data = {
-	prop: ['Kills', 'Scores', 'index'], 
-	defaultValue: [0, 0, -1]
+	prop: ['Kills', 'Scores', 'index', 'choice'], 
+	defaultValue: [0, 0, -1, null]
 }
 
 // Выход из сервера
