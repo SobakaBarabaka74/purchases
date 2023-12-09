@@ -68,17 +68,17 @@ furm.Tags = ['furm'];
 furm.Enable = true;
 furm.OnEnter.Add(function(p, a) {
 	let pt = p.Properties;
-	switch (a.Name) {
+	switch (a.Name.trim()) {
 		case '1':
-			p.Timers.Get('furm1').RestartLoop(1);
+			p.Timers.Get('1').RestartLoop(1);
 			pt.Get('furm').Value = 'furm1';
 			break;
 		case '2':
-			p.Timers.Get('furm2').RestartLoop(5);
+			p.Timers.Get('2').RestartLoop(5);
 			pt.Get('furm').Value = 'furm2';
 			break;
 		case '3':
-			p.Timers.Get('furm3').RestartLoop(10);
+			p.Timers.Get('3').RestartLoop(10);
 			pt.Get('furm').Value = 'furm3';
 			break;
 		default:
@@ -91,6 +91,11 @@ furm.OnExit.Add(function(p) {
 		p.Properties.Get('furm').Value = null;
 	} catch (err) { }
 });
+
+var furmView = AreaViewService.GetContext().Get('Furm');
+furmView.Enable = true;
+furmView.Color = { r: 1, g: 1, b: 1 };
+furmView.Tags = ['furm'];
 
 Timers.OnPlayerTimer.Add(function(t) {
 	let p = t.Player;
