@@ -87,6 +87,7 @@ furm.OnEnter.Add(function(p, a) {
 });
 furm.OnExit.Add(function(p) {
 	try {
+		p.Ui.Hint.Value = p.Properties.Get('furm').Value;
 		p.Timers.Get(p.Properties.Get('furm').Value).Stop();
 		p.Properties.Get('furm').Value = null;
 	} catch (err) { }
@@ -100,6 +101,7 @@ furmView.Tags = ['furm'];
 Timers.OnPlayerTimer.Add(function(t) {
 	let p = t.Player;
 	
+	if (!furm.Contains(p)) return;
 	switch (t.Id) {
 		case '1':
 			p.Properties.Get('Scores').Value += 10;
