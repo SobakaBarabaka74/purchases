@@ -133,10 +133,11 @@ var shop = [
 	})
 ];
 
+// Листает лист вперёд, смещая индекс на +1
 next.OnEnter.Add(function(p) {
 	let prop = p.Properties;
-	if (prop.Get('index').Value < shop.length) prop.Get('index').Value += 1
-	else prop.Get('index').Value = 0;
+	if (prop.Get('index').Value > (shop.length - 1)) prop.Get('index').Value = 0
+	else prop.Get('index').Value += 1;
 	p.Ui.Hint.Value = shop[prop.Get('index').Value].Name + '. цена: ' + shop[prop.Get('index').Value].Price;
 });
 
