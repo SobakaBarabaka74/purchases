@@ -124,10 +124,10 @@ but = createTrigger('But', ['but'], true);
 // Лист магазина
 var shop = [
 	createShopAttribyte('Вторичное оружие', 4600, function (p) {
-		return p.inventory.Secondary.Value;
+		return p.inventory.Secondary.Value == true;
 	}),
 	createShopAttribyte('Основное оружие', 7900, function (p) {
-		return p.inventory.Main.Value;
+		return p.inventory.Main.Value == true;
 	})
 ];
 
@@ -147,7 +147,7 @@ shop.forEach(function(el) {
 		// Покупка
 		if (prop.Get('choice').Value != false) {
 			let sh = shop[prop.Get('choice').Value];
-			if (sh.Cond(p)) {
+			if (sh.Cond(p) == true) {
 				p.Ui.Hint.Value = 'товар уже приобретён';
 				return;
 			}
