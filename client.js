@@ -126,7 +126,7 @@ var shop = [
 	createShopAttribyte('Вторичное оружие', 4600, function (p) {
 		p.inventory.Secondary.Value = true;
 		return p.inventory.Secondary.Value;
-	}), f
+	}),
 	createShopAttribyte('Основное оружие', 7900, function (p) {
 		p.inventory.Main.Value = true;
 		return p.inventory.Main.Value;
