@@ -20,6 +20,12 @@ var createTrigger = function (Name_, Tags_, Enable_) {
 	view.Enable = Enable_;
 	view.Color = Color_;
 	return view;
+}, createShopAttribyte = function (Name_, Price_, Cond_) {
+	return {
+		Name: Name_, 
+		Price: Price_, 
+		Cond: Cond_
+	}
 }
 
 // Создание команд
@@ -42,7 +48,7 @@ Spawns.GetContext().RespawnTime.Value = 0;
 // Сохранение
 var data = {
 	prop: ['Kills', 'Scores', 'index'], 
-	defaultValue: [0, 0, -1]
+	defaultValue: [0, 0, -2]
 }
 
 // Выход из сервера
@@ -115,16 +121,16 @@ createView('But', ['but'], true, { r: 1, g: 1 });
 var next = createTrigger('Next', ['next'], true), back = createTrigger('Back', ['back'], true),
 but = createTrigger('But', ['but'], true);
 
-// todo переделать
+// Лист магазина
 var shop = [
-	{
-		Name: 'Вторичное оружие', 
-		Price: 4500
-	}, 
-	{
-		Name: 'Основное оружие', 
-		Price: 8700
-	}
+	createShopAttribyte('Вторичное оружие', 4600, function (p) {
+		p.inventory.Secondary.Value = true;
+		return p.inventory.Secondary.Value;
+	}), 
+	createShopAttribyte('Основное оружие', 7900, function (p) {
+		p.inventory.Main.Value = true;
+		return p.inventory.Main.Value;
+	})
 ];
 
 next.OnEnter.Add(function(p) {
