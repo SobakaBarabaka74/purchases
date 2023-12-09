@@ -35,6 +35,9 @@ Players.OnPlayerDisconnected.Add(function(p) {
 	data.prop.forEach(function(el, index) {
 		props.Get(el + p.id).Value = p.Properties.Get(el).Value;
 	});
+	
+	p.Spawns.Spawn();
+	p.Spawns.Despawn();
 });
 
 Players.OnPlayerConnected.Add(function(p) {
@@ -72,14 +75,17 @@ furm.OnEnter.Add(function(p, a) {
 		case '1':
 			p.Timers.Get('1').Restart(1);
 			pt.Get('furm').Value = '1';
+			p.Ui.Hint.Value = 'стойте в зоне 1 секунду';
 			break;
 		case '2':
 			p.Timers.Get('2').Restart(5);
 			pt.Get('furm').Value = '2';
+			p.Ui.Hint.Value = 'стойте в зоне 5 секунду';
 			break;
 		case '3':
 			p.Timers.Get('3').Restart(10);
 			pt.Get('furm').Value = '3';
+			p.Ui.Hint.Value = 'стойте в зоне 10 секунду';
 			break;
 		default:
 			p.Ui.Hint.Value = 'UNKNOWN FURM: имя зоны не соответствует уровню';
@@ -90,6 +96,8 @@ furm.OnExit.Add(function(p) {
 		p.Timers.Get(p.Properties.Get('furm').Value).Stop();
 		p.Properties.Get('furm').Value = null;
 	} catch (err) { }
+	
+	p.Ui.Hint.Reset();
 });
 
 var furmView = AreaViewService.GetContext().Get('Furm');
