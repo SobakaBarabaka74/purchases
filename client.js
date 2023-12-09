@@ -60,34 +60,3 @@ LeaderBoard.PlayerLeaderBoardValues = [
 		ShortDisplayName: '<b>S</b>'
 	}
 ];
-
-// Функции
-// Создание зоны
-const options = {
-	trigger: 'Test', 
-	tags: ['Test'], 
-	enable: true, 
-	view: true, 
-	color: { r: 0 }, 
-	onEnter: function (p) {
-		p.Ui.Hint.Value = 'Hi!';
-	}
-}
-
-function createArea(settings = {}) {
-	let ns = Object.assign(settings, options);
-	let area = AreaPlayerTriggerService.Get(ns.trigger);
-	
-	area.Tags = ns.tags;
-	area.Enable = ns.enable;
-	area.OnEnter.Add(ns.onEnter(p, a));
-	
-	if (ns.view) {
-		let view = AreaViewService.Get(ns.trigger);
-		view.Color = ns.color;
-		view.Enable = true;
-		view.Tags = ns.tags;
-	}
-	
-	return area;
-}
