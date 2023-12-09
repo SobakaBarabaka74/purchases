@@ -137,12 +137,10 @@ shop.forEach(function(el) {
 		view = createView(el.Name, ['Shop'], true, { r: 1, g: 1, b: 1 });
 		
 	area.OnEnter.Add(function(p, a) {
+		try {
 		p.Ui.Hint.Value = shop[parseInt(a.Name)].Name + '. Цена: ' + shop[parseInt(a.Name)].Price;
 		
 		let prop = p.Properties;
-		
-		// Выбраный магазин ( хранит индекс товара ) 
-		prop.Get('choice').Value = parseInt(a.Name);
 		
 		// Покупка
 		if (prop.Get('choice').Value != false) {
@@ -159,6 +157,10 @@ shop.forEach(function(el) {
 				p.Ui.Hint.Value = 'недостаточно средств';
 			}
 		}
+		
+		// Выбраный магазин ( хранит индекс товара ) 
+		prop.Get('choice').Value = parseInt(a.Name);
+		} catch (err) { msg.Show(err); }
 	});
 });
 
