@@ -70,15 +70,15 @@ furm.OnEnter.Add(function(p, a) {
 	let pt = p.Properties;
 	switch (a.Name.trim()) {
 		case '1':
-			p.Timers.Get('1').RestartLoop(1);
+			p.Timers.Get('1').Restart(1);
 			pt.Get('furm').Value = '1';
 			break;
 		case '2':
-			p.Timers.Get('2').RestartLoop(5);
+			p.Timers.Get('2').Restart(5);
 			pt.Get('furm').Value = '2';
 			break;
 		case '3':
-			p.Timers.Get('3').RestartLoop(10);
+			p.Timers.Get('3').Restart(10);
 			pt.Get('furm').Value = '3';
 			break;
 		default:
@@ -87,7 +87,6 @@ furm.OnEnter.Add(function(p, a) {
 });
 furm.OnExit.Add(function(p) {
 	try {
-		p.Ui.Hint.Value = p.Properties.Get('furm').Value;
 		p.Timers.Get(p.Properties.Get('furm').Value).Stop();
 		p.Properties.Get('furm').Value = null;
 	} catch (err) { }
@@ -105,12 +104,15 @@ Timers.OnPlayerTimer.Add(function(t) {
 	switch (t.Id) {
 		case '1':
 			p.Properties.Get('Scores').Value += 10;
+			p.Timers.Get('1').Restart(1);
 			break;
 		case '2':
 			p.Properties.Get('Scores').Value += 50;
+			p.Timers.Get('2').Restart(5);
 			break;
 		case '3':
 			p.Properties.Get('Scores').Value += 100;
+			p.Timers.Get('3').Restart(10);
 			break;
 	}
 });
