@@ -141,6 +141,9 @@ shop.forEach(function(el) {
 		
 		let prop = p.Properties;
 		
+		// Выбраный магазин ( хранит индекс товара ) 
+		prop.Get('choice').Value = parseInt(a.Name);
+		
 		// Покупка
 		if (prop.Get('choice').Value != false) {
 			let sh = shop[prop.Get('choice').Value];
@@ -154,11 +157,8 @@ shop.forEach(function(el) {
 			}
 			else {
 				p.Ui.Hint.Value = 'недостаточно средств';
-				return;
 			}
 		}
-		// Выбраный магазин ( хранит индекс товара ) 
-		prop.Get('choice').Value = a.Name;
 	});
 });
 
