@@ -1,5 +1,3 @@
-try {
-
 /*
 	Режим покупок. 
 	Ps: Создал потому что понравилось играть в оригинальный режим. Но там
@@ -93,5 +91,3 @@ function createArea(settings = {}) {
 	
 	return area;
 }
-
-} catch (err) { msg.ShowError(err); }
