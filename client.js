@@ -143,7 +143,7 @@ shop.forEach(function(el) {
 		let prop = p.Properties;
 		
 		// Покупка
-		if (prop.Get('choice').Value >= -1) {
+		if (prop.Get('choice').Value == 0) {
 			let sh = shop[prop.Get('choice').Value];
 			if (sh.Cond(p) == true) {
 				p.Ui.Hint.Value = 'товар уже приобретён';
@@ -152,8 +152,7 @@ shop.forEach(function(el) {
 			if (prop.Get('Scores').Value >= sh.Price) {
 				eval(sh.Cond(p) + '= true');
 				p.Ui.Hint.Value = 'Успешно приобретено';
-			}
-			else {
+			} else {
 				p.Ui.Hint.Value = 'недостаточно средств';
 			}
 		}
