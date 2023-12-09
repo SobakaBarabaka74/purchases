@@ -83,14 +83,13 @@ furm.OnEnter.Add(function(p, a) {
 			break;
 		default:
 			p.Ui.Hint.Value = 'UNKNOWN FURM: имя зоны не соответствует уровню';
-			break;
 	}
 });
 furm.OnExit.Add(function(p) {
 	try {
 		p.Timers.Get(p.Properties.Get('furm').Value).Stop();
 		p.Properties.Get('furm').Value = null;
-	} catch { }
+	} catch (err) { }
 });
 
 Timers.OnPlayerTimer.Add(function(t) {
