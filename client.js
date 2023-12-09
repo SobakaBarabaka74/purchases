@@ -143,7 +143,7 @@ shop.forEach(function(el) {
 		let prop = p.Properties;
 		
 		// Покупка
-		if (prop.Get('choice').Value != undefined || prop.Get('choice').Value != null) {
+		if (prop.Get('choice').Value >= -1) {
 			let sh = shop[prop.Get('choice').Value];
 			if (sh.Cond(p) == true) {
 				p.Ui.Hint.Value = 'товар уже приобретён';
