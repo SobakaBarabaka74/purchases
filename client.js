@@ -71,15 +71,15 @@ furm.OnEnter.Add(function(p, a) {
 	switch (a.Name.trim()) {
 		case '1':
 			p.Timers.Get('1').RestartLoop(1);
-			pt.Get('furm').Value = 'furm1';
+			pt.Get('furm').Value = '1';
 			break;
 		case '2':
 			p.Timers.Get('2').RestartLoop(5);
-			pt.Get('furm').Value = 'furm2';
+			pt.Get('furm').Value = '2';
 			break;
 		case '3':
 			p.Timers.Get('3').RestartLoop(10);
-			pt.Get('furm').Value = 'furm3';
+			pt.Get('furm').Value = '3';
 			break;
 		default:
 			p.Ui.Hint.Value = 'UNKNOWN FURM: имя зоны не соответствует уровню';
