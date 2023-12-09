@@ -126,7 +126,7 @@ var shop = [
 	createShopAttribyte('Вторичное оружие', 4600, function (p) {
 		p.inventory.Secondary.Value = true;
 		return p.inventory.Secondary.Value;
-	}), 
+	}), f
 	createShopAttribyte('Основное оружие', 7900, function (p) {
 		p.inventory.Main.Value = true;
 		return p.inventory.Main.Value;
@@ -137,7 +137,7 @@ var shop = [
 next.OnEnter.Add(function(p) {
 	let prop = p.Properties;
 	
-	if (prop.Get('index').Value > (shop.length - 1)) {
+	if (prop.Get('index').Value >= (shop.length - 1)) {
 		prop.Get('index').Value = -1;
 	}
 	else {
