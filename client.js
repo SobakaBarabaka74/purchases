@@ -129,7 +129,7 @@ var shop = [
 
 next.OnEnter.Add(function(p) {
 	let prop = p.Properties;
-	if (prop.Get('index').Value <= shop.length) prop.Get('index').Value += 1
+	if (prop.Get('index').Value < shop.length - 1) prop.Get('index').Value += 1
 	else prop.Get('index').Value = 0;
 	p.Ui.Hint.Value = shop[prop.Get('index').Value].Name + '. цена: ' + shop[prop.Get('index').Value].Price;
 });
