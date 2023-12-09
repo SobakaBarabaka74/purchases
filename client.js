@@ -124,27 +124,42 @@ but = createTrigger('But', ['but'], true);
 // Лист магазина
 var shop = [
 	createShopAttribyte('Вторичное оружие', 4600, function (p) {
-		p.inventory.Secondary.Value = true;
 		return p.inventory.Secondary.Value;
 	}),
 	createShopAttribyte('Основное оружие', 7900, function (p) {
-		p.inventory.Main.Value = true;
 		return p.inventory.Main.Value;
 	})
 ];
 
-// Листает лист вперёд, смещая индекс на +1
-next.OnEnter.Add(function(p) {
-	let prop = p.Properties;
-	
-	if (prop.Get('index').Value >= (shop.length - 1)) {
-		prop.Get('index').Value = -1;
-	}
-	else {
-		prop.Get('index').Value += 1;
-	}
-	
-	p.Ui.Hint.Value = shop[prop.Get('index').Value].Name + '. цена: ' + shop[prop.Get('index').Value].Price;
+// Создаём каждую зону отдельно
+shop.forEach(function(el) {
+	let area = createTrigger(el.Name, ['Shop'], true), 
+		view = createView(el.Name, ['Shop'], true, { r: 1, g: 1, b: 1 });
+		
+	area.OnEnter.Add(function(p, a) {
+		p.Ui.Hint.Value = shop[parseInt(a.Name)].Name + '. Цена: ' + shop[parseInt(a.Name)].Price;
+		
+		let prop = p.Properties;
+		
+		// Покупка
+		if (prop.Get('choice').Value != false) {
+			let sh = shop[prop.Get('choice').Value];
+			if (sh.Cond(p)) {
+				p.Ui.Hint.Value = 'товар уже приобретён';
+				return;
+			}
+			if (prop.Get('Scores').Value >= sh.Price) {
+				eval(sh.Cond(p) + '= true');
+				p.Ui.Hint.Value = 'Успешно приобретено';
+			}
+			else {
+				p.Ui.Hint.Value = 'недостаточно средств';
+				return;
+			}
+		}
+		// Выбраный магазин ( хранит индекс товара ) 
+		prop.Get('choice').Value = a.Name;
+	});
 });
 
 // Таймер игрока
