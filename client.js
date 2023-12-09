@@ -2,7 +2,25 @@
 	Режим покупок. 
 	Ps: Создал потому что понравилось играть в оригинальный режим. Но там
 	какое то говно если честно :)
-*/
+*/ 
+
+// DEFINES
+var inventory = Inventory.GetContext(), props = Properties.GetContext();
+
+// FUNCTIONA
+var createTrigger = function (Name_, Tags_, Enable_) {
+	let trigger = AreaPlayerTriggerService.Get(Name_);
+	trigger.Tags = Tags_;
+	trigger.Enable = Enable_;
+	return trigger;
+	
+}, createView = function (Name_, Tags_, Enable_, Color_) {
+	let view = AreaViewService.GetContext().Get(Name_);
+	view.Tags = Tags_;
+	view.Enable = Enable_;
+	view.Color = Color_;
+	return view;
+}
 
 // Создание команд
 Teams.Add('Team', '<b><size=40>T</size><size=30>eam</size></b>', { g: 80, r: 2, b: 12 });
@@ -10,27 +28,24 @@ var team = Teams.Get('Team');
 team.Spawns.SpawnPointsGroups.Add(1);
 
 // Настройки
-Properties.GetContext().GameModeName.Value = 'GameMode/Purchases';
-
-var inventory = Inventory.GetContext();
 inventory.Main.Value = false;
 inventory.Secondary.Value = false;
 inventory.Explosive.Value = false;
 inventory.Build.Value = false;
-
+// Выключаем ломание
 BreackGraph.Damage = false;
-
+// Делаем невозможным сменить карту
 Build.GetContext().LoadMapEnable.Value = false;
-
+// Ставим моментальный спавн
 Spawns.GetContext().RespawnTime.Value = 0;
 
 // Сохранение
-var props = Properties.GetContext();
 var data = {
-	prop: ['Kills', 'Scores'], 
-	defaultValue: [0, 0]
+	prop: ['Kills', 'Scores', 'index'], 
+	defaultValue: [0, 0, -1]
 }
 
+// Выход из сервера
 Players.OnPlayerDisconnected.Add(function(p) {
 	data.prop.forEach(function(el, index) {
 		props.Get(el + p.id).Value = p.Properties.Get(el).Value;
@@ -40,6 +55,7 @@ Players.OnPlayerDisconnected.Add(function(p) {
 	p.Spawns.Despawn();
 });
 
+// Вход на сервер
 Players.OnPlayerConnected.Add(function(p) {
 	data.prop.forEach(function(el, index) {
 		p.Properties.Get(el).Value = props.Get(el + p.id).Value || data.defaultValue[index];
@@ -65,62 +81,66 @@ LeaderBoard.PlayerLeaderBoardValues = [
 ];
 
 // Фармилка
-// В название зоны нужно писать уровень зоны, от 1 до 3
-var furm = AreaPlayerTriggerService.Get('Furm');
-furm.Tags = ['furm'];
-furm.Enable = true;
+// В название зоны нужно писать время ожидания, время * 10 = количество монет
+var furmView = createView('Furm', ['furm'], true, { r: 1, g: 1, b: 1 }),
+	furm = createTrigger('Furm', ['furm'], true);
+
 furm.OnEnter.Add(function(p, a) {
-	let pt = p.Properties;
-	switch (a.Name.trim()) {
-		case '1':
-			p.Timers.Get('1').Restart(1);
-			pt.Get('furm').Value = '1';
-			p.Ui.Hint.Value = 'стойте в зоне 1 секунду';
-			break;
-		case '2':
-			p.Timers.Get('2').Restart(5);
-			pt.Get('furm').Value = '2';
-			p.Ui.Hint.Value = 'стойте в зоне 5 секунду';
-			break;
-		case '3':
-			p.Timers.Get('3').Restart(10);
-			pt.Get('furm').Value = '3';
-			p.Ui.Hint.Value = 'стойте в зоне 10 секунду';
-			break;
-		default:
-			p.Ui.Hint.Value = 'UNKNOWN FURM: имя зоны не соответствует уровню';
-	}
+	// Время ожидания
+	let time = parseInt(a.Name);
+	// Запускаем таймер
+	p.Properties.Get('time').Value = time;
+	p.Timers.Get('farm').Restart(time);
+	// Вывод подсказки
+	p.Ui.Hint.Value = 'Стойте в зоне ' + time + ' секунд';
+	
+	// Если монет дают меньше чем 100, то даём игроку бессмертие на время проведения в зоне
+	if (time * 10 <= 100) p.Damage.DamageIn.Value = false;
 });
+
+// Обработчик выхода из зоны
 furm.OnExit.Add(function(p) {
 	try {
-		p.Timers.Get(p.Properties.Get('furm').Value).Stop();
-		p.Properties.Get('furm').Value = null;
+		p.Timers.Get('farm').Stop();
+		p.Ui.Hint.Reset();
+		p.Damage.DamageIn.Value = true;
 	} catch (err) { }
-	
-	p.Ui.Hint.Reset();
 });
 
-var furmView = AreaViewService.GetContext().Get('Furm');
-furmView.Enable = true;
-furmView.Color = { r: 1, g: 1, b: 1 };
-furmView.Tags = ['furm'];
+// Магазин
+createView('Next', ['next'], true, { g: 1 });
+createView('Back', ['back'], true, { r: 1 });
+createView('But', ['but'], true, { r: 1, g: 1 });
 
+var next = createTrigger('Next', ['next'], true), back = createTrigger('Back', ['back'], true),
+but = createTrigger('But', ['but'], true);
+
+// todo переделать
+var shop = [
+	{
+		Name: 'Вторичное оружие', 
+		Price: 4500
+	}, 
+	{
+		Name: 'Основное оружие', 
+		Price: 8700
+	}
+];
+
+next.OnEnter.Add(function(p) {
+	let prop = p.Properties;
+	if (prop.Get('index').Value <= shop.length) prop.Get('index').Value += 1
+	else prop.Get('index').Value = 0;
+	p.Ui.Hint.Value = shop[prop.Get('index').Value].Name + '. цена: ' + shop[prop.Get('index').Value].Price;
+});
+
+// Таймер игрока
 Timers.OnPlayerTimer.Add(function(t) {
-	let p = t.Player;
+	let id = t.Id, p = t.Player, prop = p.Properties;
 	
-	if (!furm.Contains(p)) return;
-	switch (t.Id) {
-		case '1':
-			p.Properties.Get('Scores').Value += 10;
-			p.Timers.Get('1').Restart(1);
-			break;
-		case '2':
-			p.Properties.Get('Scores').Value += 50;
-			p.Timers.Get('2').Restart(5);
-			break;
-		case '3':
-			p.Properties.Get('Scores').Value += 100;
-			p.Timers.Get('3').Restart(10);
-			break;
+	if (id == 'farm') {
+		let time = prop.Get('time');
+		prop.Get('Scores').Value += time.Value * 10;
+		p.Timers.Get('farm').Restart(time.Value);
 	}
 });
