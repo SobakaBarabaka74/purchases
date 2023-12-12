@@ -14,7 +14,7 @@ Timers.OnPlayerTimer.Add(function(t) {
     
   if (id == 'inventory') {
     if (prop.Get('index').Value < (WEAPONS.length - 1)) {
-      p.inventory[WEAPONS[prop.Get('index')]].Value = true;
+      p.inventory[WEAPONS[prop.Get('index').Value]].Value = true;
       prop.Get('index').Value += 1;
       p.Timers.Restart(UPDATING_TIME);
     }
