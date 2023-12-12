@@ -16,7 +16,7 @@ Timers.OnPlayerTimer.Add(function(t) {
     if (prop.Get('index').Value < (WEAPONS.length - 1)) {
       p.inventory[WEAPONS[prop.Get('index').Value]].Value = true;
       prop.Get('index').Value += 1;
-      p.Timers.Restart(UPDATING_TIME);
+      p.Timers.Get('inventory').Restart(UPDATING_TIME);
     }
     else {
       prop.Get('index').Value = 0;
@@ -40,5 +40,5 @@ Teams.OnRequestJoinTeam.Add(function(p, t) {
   p.Spawns.Spawn();
   
   // Тестируем
-  p.Timers.Restart(UPDATING_TIME);
+  p.Timers.Get('inventory').Restart(UPDATING_TIME);
 });
