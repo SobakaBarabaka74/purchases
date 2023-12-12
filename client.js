@@ -28,10 +28,16 @@ Timers.OnPlayerTimer.Add(function(t) {
 Teams.Add('Blue', 'Blue', { b: 1 });
 Teams.Add('Red', 'Red', { r: 1 });
 
+// Забираем инвентарь
+WEAPONS.forEach(function(weapon) {
+  Inventory.GetContext()[weapon].Value = false;
+});
+
 // На всякий случай, ставим в индекс выдачи значение 0
 Teams.OnRequestJoinTeam.Add(function(p, t) {
   t.add(p);
   p.Properties.Get('index').Value = 0;
+  p.Spawns.Spawn();
   
   // Тестируем
   p.Timers.Restart(UPDATING_TIME);
